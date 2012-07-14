@@ -1,0 +1,15 @@
+require File.expand_path('../spec_helper', __FILE__)
+
+include <%= DCA.project_name%>::Areas::<%= @class_name %>
+
+describe '<%= @class_name%> analyzer' do
+  before :all do
+    <%= DCA.project_name %>::Project.remove
+    <%= DCA.project_name %>::Project.install
+    DCA::Notifier.create APP_CONFIG[:notifier]
+  end
+
+  after :all do
+    <%= DCA.project_name %>::Project.remove
+  end
+end

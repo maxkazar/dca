@@ -1,0 +1,18 @@
+test:
+  elascticseach_db:
+    driver: ElasticSearch
+    host: localhost
+    port: 9200
+    index: test
+  mongo_db:
+    driver: Mongo
+    host: localhost
+    port: 27017
+    collection: test
+  db:
+    driver: Mock::File
+  notifier:
+    driver: Mock::Web
+  logger: false
+
+

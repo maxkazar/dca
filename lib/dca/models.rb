@@ -1,0 +1,5 @@
+require File.expand_path('../models/binder', __FILE__)
+require File.expand_path('../models/binder_helper', __FILE__)
+require File.expand_path('../models/nokogiri_binder', __FILE__)
+require File.expand_path('../models/base_model', __FILE__)
+require File.expand_path('../models/position', __FILE__)

@@ -1,0 +1,17 @@
+module <%= DCA.project_name %>
+  module Areas
+    module <%= @class_name %>
+      class Page < DCA::Models::BaseModel
+        attr_reader :url, :number
+
+        # need to ser right selector
+        # has_many :positions, :selector => 'div'
+
+        def next
+          @number += 1
+          # get next page if it posible or return nil
+        end
+      end
+    end
+  end
+end
