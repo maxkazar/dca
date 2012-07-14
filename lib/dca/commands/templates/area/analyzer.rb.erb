@@ -1,0 +1,34 @@
+module <%= DCA.project_name %>
+  module Areas
+    module <%= @class_name %>
+      # Base analyze jobs class for <%=@class_name%> area.
+      class AnalyzerJob < DCA::Jobs::AnalyzerJob
+        def change
+          false
+        end
+
+        def positions &block
+          page = Page.find options[:category]
+          until page.nil? do
+            logger.debug "Page number #{page.number}"
+
+            page.positions.each do |position|
+              begin
+                block.call position
+              rescue Exception => e
+                logger.exception e
+              end
+            end
+
+            break if shutdown?
+            break unless page.next
+          end
+        end
+
+        def fetch position
+          position
+        end
+      end
+    end
+  end
+end

@@ -1,0 +1,13 @@
+---
+- id: 1
+  checksum: '1'
+  failed: false
+  base_id: 1
+- id: 2
+  checksum: '2'
+  failed: true
+  base_id: 2
+- id: 3
+  checksum: '2'
+  failed: false
+  base_id: 3

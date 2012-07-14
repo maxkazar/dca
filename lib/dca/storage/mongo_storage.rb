@@ -1,0 +1,51 @@
+module DCA
+  class MongoStorage
+    attr_reader :database, :collection
+
+    def initialize(connection, context, options = {})
+      @database = connection.db(options[:database] || DCA.project_name.underscore)
+      @connection = connection
+      @collection = database.collection(options[:collection] || context.to_s.demodulize.downcase.pluralize)
+    end
+
+    def self.establish_connection(config)
+      Mongo::Connection.new config[:host], config[:port]
+    end
+
+    def state(position)
+      item = find position
+      return :create if item.nil?
+
+      position.id = item['_id']
+      return :unmodified if item['checksum'] == position.checksum
+
+      return :update
+    end
+
+    def find position
+      collection.find_one base_id: position.base_id unless position.base_id.nil?
+    end
+
+    def refresh(item, state)
+      send state, item
+    end
+
+    def create(item)
+      item.id = collection.insert item.to_hash
+    end
+
+    def update(item)
+      collection.update({_id: item.id}, item.to_hash)
+    end
+
+    def remove(item)
+      collection.remove _id: item.id
+    end
+
+    def context object
+      result = self.clone
+      result.instance_variable_set :@collection, result.database.collection(object.to_s.demodulize.downcase.pluralize)
+      result
+    end
+  end
+end
