@@ -9,11 +9,11 @@ unless defined? APP_CONFIG
   end
 end
 
-unless defined? AREA_CONFIG
+unless defined? AREAS_CONFIG
   if APP_CONFIG[:areas]
-    AREA_CONFIG = APP_CONFIG[:areas][ENV['QUEUE']]
+    AREAS_CONFIG = APP_CONFIG[:areas]
   else
-    AREA_CONFIG = {}
+    AREAS_CONFIG = {}
   end
 end
 
