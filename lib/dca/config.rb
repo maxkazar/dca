@@ -9,3 +9,12 @@ unless defined? APP_CONFIG
   end
 end
 
+unless defined? AREA_CONFIG
+  if APP_CONFIG[:areas]
+    AREA_CONFIG = APP_CONFIG[:areas][ENV['QUEUE']]
+  else
+    AREA_CONFIG = {}
+  end
+end
+
+
