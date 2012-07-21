@@ -1,5 +1,3 @@
-AREA_CONFIG = {} unless defined? AREA_CONFIG
-
 module DCA
   module Commands
     class Area < Thor
@@ -83,9 +81,9 @@ module DCA
       private
 
       def area_config area_name
-        AREA_CONFIG[area_name] ||= {}
-        return AREA_CONFIG[area_name] = APP_CONFIG[:areas][area_name] if APP_CONFIG[:areas]
-        AREA_CONFIG[area_name]
+        config = {}
+        config = APP_CONFIG[:areas][area_name] if APP_CONFIG[:areas]
+        config
       end
 
       def run_worker(queue, count = 1, background = true)
