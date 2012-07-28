@@ -2,4 +2,4 @@
 
 require File.expand_path('../../lib/dca', __FILE__)
 
-Dca::CLI.start
+DCA::CLI.start

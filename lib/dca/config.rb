@@ -9,3 +9,12 @@ unless defined? APP_CONFIG
   end
 end
 
+unless defined? AREAS_CONFIG
+  if APP_CONFIG[:areas]
+    AREAS_CONFIG = APP_CONFIG[:areas]
+  else
+    AREAS_CONFIG = {}
+  end
+end
+
+

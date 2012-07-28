@@ -81,9 +81,9 @@ module DCA
       private
 
       def area_config area_name
-        areas_config = APP_CONFIG[:areas]
-        return areas_config[area_name] if areas_config
-        {}
+        config = {}
+        config = APP_CONFIG[:areas][area_name] if APP_CONFIG[:areas]
+        config
       end
 
       def run_worker(queue, count = 1, background = true)
