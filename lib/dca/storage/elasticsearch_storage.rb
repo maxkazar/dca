@@ -5,7 +5,7 @@ module DCA
     def initialize(connection, context, options = {})
       @connection = connection
       @index = options[:index] || DCA.project_name.underscore
-      @type = options[:type] || context.to_s.demodulize.downcase.pluralize
+      @type = options[:type] || get_alias(context)
     end
 
     def self.establish_connection(config)
@@ -73,8 +73,14 @@ module DCA
 
     def context object
       result = self.clone
-      result.instance_variable_set :@type, object.to_s.demodulize.downcase.pluralize
+      result.instance_variable_set :@type, get_alias(object)
       result
+    end
+
+    private
+
+    def get_alias object
+      object.respond_to?(:alias) ? object.alias : object.to_s.demodulize.downcase.pluralize
     end
   end
 end

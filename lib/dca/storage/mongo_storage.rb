@@ -5,7 +5,7 @@ module DCA
     def initialize(connection, context, options = {})
       @database = connection.db(options[:database] || DCA.project_name.underscore)
       @connection = connection
-      @collection = database.collection(options[:collection] || context.to_s.demodulize.downcase.pluralize)
+      @collection = database.collection(options[:collection] || get_alias(context))
     end
 
     def self.establish_connection(config)
@@ -44,8 +44,14 @@ module DCA
 
     def context object
       result = self.clone
-      result.instance_variable_set :@collection, result.database.collection(object.to_s.demodulize.downcase.pluralize)
+      result.instance_variable_set :@collection, result.database.collection(get_alias object)
       result
+    end
+
+    private
+
+    def get_alias object
+      object.respond_to?(:alias) ? object.alias : object.to_s.demodulize.downcase.pluralize
     end
   end
 end
