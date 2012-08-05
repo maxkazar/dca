@@ -13,7 +13,6 @@ module DCA
       Tire.configure { url "http://#{config[:host]}:#{config[:port]}" }
     end
 
-
     def state position
       item = find position
       return :create if item.nil?
@@ -36,8 +35,7 @@ module DCA
 
     def create(item)
       item.updated_at = item.created_at = Time.now.utc
-      data = item.to_hash
-      data[:type] = type
+      data = hash_from item
 
       result = Tire.index(@index).store data
       Tire.index(@index).refresh
@@ -46,9 +44,7 @@ module DCA
     end
 
     def update(item)
-      data = item.to_hash
-      data[:type] = type
-
+      data = hash_from item
       Tire.index(@index) do
         store data
         refresh
@@ -56,8 +52,7 @@ module DCA
     end
 
     def remove(item)
-      data = item.to_hash
-      data[:type] = type
+      data = hash_from item
 
       Tire.index(@index) do
         remove data
@@ -78,6 +73,14 @@ module DCA
     end
 
     private
+
+    def hash_from(item)
+      data = item.to_hash
+      data[:_id] = data[:id] if data[:id]
+      data.delete(:id)
+      data[:type] = type
+      data
+    end
 
     def get_alias object
       object.respond_to?(:alias) ? object.alias : object.to_s.demodulize.downcase.pluralize

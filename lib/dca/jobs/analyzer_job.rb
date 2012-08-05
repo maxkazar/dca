@@ -58,7 +58,7 @@ module DCA
       end
 
       def on_analyze(position, state)
-        logger.debug "[#{position.class}] Analyze position base_id:#{position.base_id} state:#{state}"
+        logger.debug "[#{position.class}] Analyze position base_id:#{position.base_id} checksum:#{position.checksum} state:#{state}"
         notify(:analyze, :position => position, :state => state)
       end
 
