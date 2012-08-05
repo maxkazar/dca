@@ -31,11 +31,11 @@ module DCA
     end
 
     def create(item)
-      item.id = collection.insert item.to_hash
+      item.id = collection.insert hash_from item
     end
 
     def update(item)
-      collection.update({_id: item.id}, item.to_hash)
+      collection.update({_id: item.id}, hash_from(item))
     end
 
     def remove(item)
@@ -49,6 +49,12 @@ module DCA
     end
 
     private
+
+    def hash_from(item)
+      data = item.to_hash
+      data.delete(:id)
+      data
+    end
 
     def get_alias object
       object.respond_to?(:alias) ? object.alias : object.to_s.demodulize.downcase.pluralize

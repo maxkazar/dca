@@ -25,7 +25,7 @@ module DCA
 
     def find position
       return nil if position.base_id.nil?
-      query = Tire.search(@index, :type => type) { query { term :base_id, position.base_id } }
+      query = Tire.search(@index, type: type) { query { term :base_id, position.base_id } }
       query.results.first
     end
 
