@@ -101,7 +101,7 @@ module DCA
             ops[:err] = debug_file
             ops[:out] = debug_file
           end
-          env_vars = {'QUEUE' => queue}
+          env_vars = {'QUEUE' => queue, 'SYS_ENV' => SYS_ENV}
 
           count.times {
             ## Using Kernel.spawn and Process.detach because regular system() call would
