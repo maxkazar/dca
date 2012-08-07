@@ -11,17 +11,17 @@ module DCA
     class Position < DCA::Models::Position
       attr_accessor :raise, :failed, :title
 
-      has_one :base_id, :integer, :selector => 'a', :attribute => :href, :regex => /(\d+)$/
-      has_one :title,   :string,  :selector => 'a'
+      has_one :base_id, :integer, selector: 'a', attribute: :href, regex: /(\d+)$/
+      has_one :title,   :string,  selector: 'a'
     end
 
     class ExtPosition < Position
-      has_one :description, :string, :selector => 'span.description'
-      has_one :date,        :datetime, :selector => 'span.date'
+      has_one :description, :string, selector: 'span.description'
+      has_one :date,        :datetime, selector: 'span.date'
     end
 
     class FullPosition < Position
-      has_one :base_id, :string, :selector => 'a'
+      has_one :base_id, :string, selector: 'a'
     end
 
     class ChildPosition < DCA::Models::Position
