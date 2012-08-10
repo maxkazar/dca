@@ -16,7 +16,7 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "dca"
-  gem.homepage = "http://github.com/maxkazargm@gmail.com/dca"
+  gem.homepage = "http://github.com/maxkazar/dca"
   gem.license = "MIT"
   gem.summary = %Q{DCA}
   gem.description = %Q{DCA}
