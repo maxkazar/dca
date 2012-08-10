@@ -5,14 +5,13 @@ module DCA
     def initialize(connection, context, options = {})
       @connection = connection
       @index = options[:index] || DCA.project_name.underscore
-      @type = options[:type] || context.to_s.demodulize.downcase.pluralize
+      @type = options[:type] || get_alias(context)
     end
 
     def self.establish_connection(config)
       RestClient.get("http://#{config[:host]}:#{config[:port]}")
       Tire.configure { url "http://#{config[:host]}:#{config[:port]}" }
     end
-
 
     def state position
       item = find position
@@ -26,7 +25,7 @@ module DCA
 
     def find position
       return nil if position.base_id.nil?
-      query = Tire.search(@index, :type => type) { query { term :base_id, position.base_id } }
+      query = Tire.search(@index, type: type) { query { term :base_id, position.base_id } }
       query.results.first
     end
 
@@ -36,8 +35,7 @@ module DCA
 
     def create(item)
       item.updated_at = item.created_at = Time.now.utc
-      data = item.to_hash
-      data[:type] = type
+      data = hash_from item
 
       result = Tire.index(@index).store data
       Tire.index(@index).refresh
@@ -46,9 +44,7 @@ module DCA
     end
 
     def update(item)
-      data = item.to_hash
-      data[:type] = type
-
+      data = hash_from item
       Tire.index(@index) do
         store data
         refresh
@@ -56,8 +52,7 @@ module DCA
     end
 
     def remove(item)
-      data = item.to_hash
-      data[:type] = type
+      data = hash_from item
 
       Tire.index(@index) do
         remove data
@@ -73,8 +68,22 @@ module DCA
 
     def context object
       result = self.clone
-      result.instance_variable_set :@type, object.to_s.demodulize.downcase.pluralize
+      result.instance_variable_set :@type, get_alias(object)
       result
+    end
+
+    private
+
+    def hash_from(item)
+      data = item.to_hash
+      data[:_id] = data[:id] if data[:id]
+      data.delete(:id)
+      data[:type] = type
+      data
+    end
+
+    def get_alias object
+      object.respond_to?(:alias) ? object.alias : object.to_s.demodulize.downcase.pluralize
     end
   end
 end

@@ -33,7 +33,12 @@ module DCA
         type = params[:type]
         type = find_type object, params[:field], options[:polymorphic] if type.nil? || options[:polymorphic]
 
-        result = content.css(selector).map { |node| type.new.bind node } unless selector.nil?
+        unless selector.nil?
+          result = content.css(selector)
+          result = object.send(options[:parser], result) unless options[:parser].nil?
+
+          result = result.map { |node| type.new.bind node } unless result.nil?
+        end
         result
       end
 

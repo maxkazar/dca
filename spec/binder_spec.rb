@@ -64,6 +64,22 @@ describe 'Binder' do
     page.bind Nokogiri::HTML open('./spec/fixtures/page.html')
 
     page.positions.should have(6).items
+  end
 
+  describe 'parser option' do
+    it 'should be used for has_many association' do
+      page = Mock::PageExt.new :category => :full
+      page.should_receive(:positions_parser)
+      page.bind Nokogiri::HTML open('./spec/fixtures/page.html')
+    end
+
+    it 'should change items collections for has_many association' do
+      page = Mock::PageExt.new :category => :full
+      page.should_receive(:positions_parser) do |items|
+        items[0,2]
+      end
+      page.bind Nokogiri::HTML open('./spec/fixtures/page.html')
+      page.positions.should have(2).items
+    end
   end
 end

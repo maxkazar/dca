@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Maxim Kazarin"]
-  s.date = "2012-07-28"
+  s.date = "2012-08-10"
   s.description = "DCA"
   s.email = "maxkazargm@gmail.com"
   s.executables = ["dca"]
@@ -88,7 +88,7 @@ Gem::Specification.new do |s|
     "spec/spec_helper.rb",
     "spec/support/storage_examples.rb"
   ]
-  s.homepage = "http://github.com/maxkazargm@gmail.com/dca"
+  s.homepage = "http://github.com/maxkazar/dca"
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = "1.8.24"
