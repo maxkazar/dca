@@ -20,7 +20,7 @@ module DCA
         unless element.nil?
           result = options[:attribute].nil? ? element.content : element[options[:attribute]]
         end
-        result = self.parse_options object, result, options
+        result = self.parse_options object, result, params
 
         convert result, params[:type]
       end

@@ -13,7 +13,7 @@ describe 'Area rake task' do
 
   before :each do
     Resque.inline = false
-    workers_clean
+    #workers_clean
   end
 
   after :all do
@@ -30,7 +30,7 @@ describe 'Area rake task' do
   it 'should stop area analyze work' do
     current_count = workers_count + 1
     `rake resque:work BACKGROUND=1 QUEUE=Mock`
-    sleep 1
+    sleep 4
     workers_count.should equal current_count
 
     DCA::CLI.new.area 'stop', 'Mock'
@@ -39,7 +39,24 @@ describe 'Area rake task' do
 
   it 'should start area analyze work' do
     DCA::CLI.new.area 'start', 'Mock'
-    sleep 2
+    sleep 4
     workers_count.should equal 1
+
+    DCA::CLI.new.area 'stop', 'Mock'
+    workers_count.should equal 0
+  end
+
+  it 'should stop area with set name' do
+    current_count = workers_count + 2
+    `rake resque:work BACKGROUND=1 QUEUE=Mock1`
+    `rake resque:work BACKGROUND=1 QUEUE=Mock2`
+    sleep 4
+    workers_count.should equal current_count
+
+    DCA::CLI.new.area 'stop', 'Mock1'
+    workers_count.should equal 1
+
+    DCA::CLI.new.area 'stop', 'Mock2'
+    workers_count.should equal 0
   end
 end

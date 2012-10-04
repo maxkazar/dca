@@ -120,7 +120,7 @@ module DCA
 
           queues = queues.split(',')
           next unless queues.include? name
-          pids.concat(worker.worker_pids)
+          pids << pid
         end
         pids.uniq
       end

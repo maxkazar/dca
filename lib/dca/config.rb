@@ -1,6 +1,4 @@
-SYS_ENV = ENV['SYS_ENV'] if ENV['SYS_ENV']
-
-SYS_ENV = 'development' unless defined? SYS_ENV
+SYS_ENV = ENV['SYS_ENV'] || 'development' unless defined? SYS_ENV
 
 unless defined? APP_CONFIG
   if File.exist? './config/config.yml'

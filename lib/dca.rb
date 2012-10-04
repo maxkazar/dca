@@ -61,6 +61,6 @@ require File.expand_path('../dca/notifier', __FILE__)
 require File.expand_path('../dca/models', __FILE__)
 require File.expand_path('../dca/cli', __FILE__)
 
-Resque.redis = "#{APP_CONFIG[:redis][:host]||'localhost'}:#{APP_CONFIG[:redis][:port]||'6379'}"
+Resque.redis = "#{APP_CONFIG[:redis][:host]||'localhost'}:#{APP_CONFIG[:redis][:port]||'6379'}" if APP_CONFIG[:redis]
 
 require DCA.project_path if DCA.used? && File.exist?(DCA.project_file)

@@ -1,4 +1,4 @@
-module DCA
+ module DCA
   module Models
     module BinderHelper
       extend ActiveSupport::Concern
@@ -21,7 +21,8 @@ module DCA
           end
         end
 
-        def parse_options object, value, options
+        def parse_options object, value, params
+          options = params[:options] || {}
           result = value
           if result.nil?
             result = options[:default]  unless options[:default].nil?
@@ -29,7 +30,8 @@ module DCA
             result = value[options[:regex], 1] unless options[:regex].nil?
           end
 
-          result = object.send(options[:parser], result) unless options[:parser].nil?
+          parser = "#{params[:field]}_parser"
+          result = object.send(parser, result) if object.respond_to? parser
 
           result
         end
