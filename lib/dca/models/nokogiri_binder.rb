@@ -20,7 +20,10 @@ module DCA
         unless element.nil?
           result = options[:attribute].nil? ? element.content : element[options[:attribute]]
         end
-        result = self.parse_options object, result, params
+
+        result = self.parse_options result, params
+
+        result = self.run_callback object, params, result
 
         convert result, params[:type]
       end
@@ -35,7 +38,7 @@ module DCA
 
         unless selector.nil?
           result = content.css(selector)
-          result = object.send(options[:parser], result) unless options[:parser].nil?
+          result = self.run_callback object, params, result
 
           result = result.map { |node| type.new.bind node } unless result.nil?
         end

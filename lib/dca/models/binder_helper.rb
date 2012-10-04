@@ -21,18 +21,13 @@
           end
         end
 
-        def parse_options object, value, params
-          options = params[:options] || {}
+        def parse_options value, options
           result = value
           if result.nil?
             result = options[:default]  unless options[:default].nil?
           else
             result = value[options[:regex], 1] unless options[:regex].nil?
           end
-
-          parser = "#{params[:field]}_parser"
-          result = object.send(parser, result) if object.respond_to? parser
-
           result
         end
 
@@ -43,6 +38,12 @@
           type = "#{object.class.to_s.deconstantize}::#{type_name}".constantize if type.nil?
 
           type
+        end
+
+        def run_callback object, params, content
+          parser = "#{params[:field]}_parser"
+          return object.send(parser, content) if object.respond_to? parser
+          content
         end
       end
     end
