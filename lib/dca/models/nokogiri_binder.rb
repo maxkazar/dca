@@ -21,7 +21,7 @@ module DCA
           result = options[:attribute].nil? ? element.content : element[options[:attribute]]
         end
 
-        result = self.parse_options result, params
+        result = self.parse_options result, options
 
         result = self.run_callback object, params, result
 
