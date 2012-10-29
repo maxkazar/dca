@@ -83,7 +83,7 @@ module DCA
     end
 
     def get_alias object
-      object.respond_to?(:alias) ? object.alias : object.to_s.demodulize.downcase.pluralize
+      object.respond_to?(:alias) ? object.alias : object.to_s.demodulize.underscore.pluralize
     end
   end
 end
