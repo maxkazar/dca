@@ -1,21 +1,6 @@
-source 'http://rubygems.org'
-# Add dependencies to develop your gem here.
-# Include everything needed to run rake, tests, features, etc.
-group :development do
-  gem 'mock_redis'
-  gem 'rspec'
-  gem 'yard'
-  gem 'rdoc'
-  gem 'bundler'
-  gem 'jeweler'
+source :rubygems
 
-  gem 'guard-rspec'
-  gem 'libnotify'
-end
-
-group :test do
-  gem 'simplecov', :require => false
-end
+ruby "1.9.3"
 
 # Use redis orm
 gem 'ohm'
@@ -46,3 +31,25 @@ gem 'mongo'
 
 # Use for mongo
 gem 'bson_ext'
+
+if RUBY_PLATFORM =~ /darwin/
+  gem 'rb-fsevent'
+end
+
+# Add dependencies to develop your gem here.
+# Include everything needed to run rake, tests, features, etc.
+group :development do
+  gem 'mock_redis'
+  gem 'rspec'
+  gem 'yard'
+  gem 'rdoc'
+  gem 'bundler'
+  gem 'jeweler'
+
+  gem 'guard-rspec'
+  gem 'libnotify'
+end
+
+group :test do
+  gem 'simplecov', :require => false
+end

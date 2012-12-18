@@ -13,6 +13,6 @@ test:
     driver: Mock::File
   notifier:
     driver: Mock::Web
-  logger: false
+  logger: true
 
 

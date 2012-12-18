@@ -23,13 +23,14 @@ module DCA
 
       def initialize(options = {})
         @options = options
-
-        trap('QUIT') { shutdown }
       end
 
       def safe_perform!
         perform
         on_success if respond_to?(:on_success)
+      rescue Resque::TermException
+        @shutdown = true
+        shutdown if respond_to? :shutdown
       rescue Exception => exception
         if respond_to?(:on_failure)
           on_failure(exception)
@@ -50,12 +51,6 @@ module DCA
 
       def shutdown?
         @shutdown
-      end
-
-      private
-
-      def shutdown
-        @shutdown = true
       end
     end
   end

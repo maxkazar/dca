@@ -2,61 +2,55 @@ require File.expand_path('../spec_helper', __FILE__)
 require File.expand_path('../mock/analyzer_job', __FILE__)
 
 describe 'Area rake task' do
-  def workers_clean
-    `ps aux | grep -P "resque-\\d"`.split("\n").each do |line|
-      pid = line.split(' ')[1].to_i
-      Process.kill 'TERM', pid
+  def pids
+    pids = []
+    Resque.workers.each do |worker|
+      host, pid = worker.id.split(':')
+      next unless host == worker.hostname
+      pids << pid
     end
-
-    sleep 1 while workers_count > 0
+    pids.uniq
   end
 
-  before :each do
+  def workers_clean
+    pids_to_kill = pids.join(' ')
+    `kill -s TERM #{pids_to_kill}` unless pids_to_kill.empty?
+
+    sleep 1 while pids.count > 0
+  end
+
+  before :all do
     Resque.inline = false
-    #workers_clean
+  end
+
+  before do
+    workers_clean
+    Resque.remove_queue 'Mock'
   end
 
   after :all do
-    Resque.remove_queue 'Mock'
     Resque.inline = true
-    workers_clean
-    #FileUtils.rm_rf File.join(DCA.root, 'log')
-  end
-
-  def workers_count
-    `ps aux | grep -P "resque-\\d"`.split("\n").count
-  end
-
-  it 'should stop area analyze work' do
-    current_count = workers_count + 1
-    `rake resque:work BACKGROUND=1 QUEUE=Mock`
-    sleep 4
-    workers_count.should equal current_count
-
-    DCA::CLI.new.area 'stop', 'Mock'
-    workers_count.should equal 0
   end
 
   it 'should start area analyze work' do
     DCA::CLI.new.area 'start', 'Mock'
-    sleep 4
-    workers_count.should equal 1
+    sleep 2
+    pids.count.should equal 1
 
     DCA::CLI.new.area 'stop', 'Mock'
-    workers_count.should equal 0
+    pids.count.should equal 0
   end
 
   it 'should stop area with set name' do
-    current_count = workers_count + 2
-    `rake resque:work BACKGROUND=1 QUEUE=Mock1`
-    `rake resque:work BACKGROUND=1 QUEUE=Mock2`
-    sleep 4
-    workers_count.should equal current_count
+    DCA::CLI.new.area 'start', 'Mock'
+    DCA::CLI.new.area 'start', 'OtherMock'
+    sleep 2
+    pids.count.should equal 2
 
-    DCA::CLI.new.area 'stop', 'Mock1'
-    workers_count.should equal 1
+    DCA::CLI.new.area 'stop', 'Mock'
+    pids.count.should equal 1
 
-    DCA::CLI.new.area 'stop', 'Mock2'
-    workers_count.should equal 0
+    DCA::CLI.new.area 'stop', 'OtherMock'
+    pids.count.should equal 0
   end
 end

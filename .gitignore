@@ -28,7 +28,7 @@ pkg
 #
 # For MacOS:
 #
-#.DS_Store
+.DS_Store
 
 # For TextMate
 #*.tmproj
@@ -53,3 +53,5 @@ pkg
 
 log
 coverage
+
+tmp

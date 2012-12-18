@@ -57,6 +57,7 @@ module DCA
         job_ops = {}
         job_ops[:distributed] = true if config[:distributed]
         job = "#{DCA.project_name}::Areas::#{name}::AnalyzerJob".constantize
+        puts job
         job.create job_ops
 
         background = config[:background].nil? ? true : config[:background]
@@ -69,9 +70,7 @@ module DCA
         shell.say "Stopping analyze area #{name}"
 
         pids = workers_pids name
-        unless pids.empty?
-          system("kill -s #{options[:force] ? 'TERM' : 'QUIT'} #{pids.join(' ')}")
-        end
+        `kill -s #{options[:force] ? 'QUIT' : 'TERM'} #{pids.join(' ')}` if pids
 
         wait_worker name
 
@@ -91,6 +90,8 @@ module DCA
         unless background
           ENV['QUEUE'] = queue
           ENV['VERBOSE'] = '1'
+          ENV['TERM_CHILD'] = '1'
+          ENV['RESQUE_TERM_TIMEOUT'] = RESQUE_TERM_TIMEOUT if defined? RESQUE_TERM_TIMEOUT
           Rake::Task['resque:work'].invoke
         else
           log_dir = File.join DCA.root, 'log'
@@ -101,8 +102,8 @@ module DCA
             ops[:err] = debug_file
             ops[:out] = debug_file
           end
-          env_vars = {'QUEUE' => queue, 'SYS_ENV' => SYS_ENV}
-
+          env_vars = {'TERM_CHILD' => '1', 'QUEUE' => queue, 'SYS_ENV' => SYS_ENV}
+          env_vars['RESQUE_TERM_TIMEOUT'] = RESQUE_TERM_TIMEOUT if defined? RESQUE_TERM_TIMEOUT
           count.times {
             ## Using Kernel.spawn and Process.detach because regular system() call would
             ## cause the processes to quit when capistrano finishes
@@ -113,7 +114,7 @@ module DCA
       end
 
       def workers_pids name
-        pids = Array.new
+        pids = []
         Resque.workers.each do |worker|
           host, pid, queues = worker.id.split(':')
           next unless host == worker.hostname
