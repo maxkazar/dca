@@ -14,5 +14,8 @@ test:
   notifier:
     driver: Mock::Web
   logger: true
+  areas:
+    Area1:
+    Area2:
 
 

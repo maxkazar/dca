@@ -53,4 +53,18 @@ describe 'Area rake task' do
     DCA::CLI.new.area 'stop', 'OtherMock'
     pids.count.should equal 0
   end
+
+  it 'should start all areas when start without area name' do
+    cmd = DCA::Commands::Area.new
+    cmd.should_receive(:start_area).with(:Area1)
+    cmd.should_receive(:start_area).with(:Area2)
+    cmd.start
+  end
+
+  it 'should stop all areas when stop without area name' do
+    cmd = DCA::Commands::Area.new
+    cmd.should_receive(:stop_area).with(:Area1)
+    cmd.should_receive(:stop_area).with(:Area2)
+    cmd.stop
+  end
 end

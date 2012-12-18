@@ -50,7 +50,21 @@ module DCA
       end
 
       desc 'start NAME', 'Start area to analyze'
-      def start name
+      def start name = nil
+        areas = name ? [name] : APP_CONFIG[:areas].keys
+        areas.each { |name| start_area name }
+      end
+
+      desc 'stop NAME', 'Stop area to analyze'
+      method_option :force, :type => :boolean, :aliases => '-f', :desc => 'force stop area analyzing process'
+      def stop name = nil
+        areas = name ? [name] : APP_CONFIG[:areas].keys
+        areas.each { |name| stop_area name }
+      end
+
+      protected
+
+      def start_area name
         shell.say "Starting analyze area #{name}"
         config = area_config name.to_sym
 
@@ -64,9 +78,7 @@ module DCA
         run_worker name, config[:workers] || 1, background
       end
 
-      desc 'stop NAME', 'Stop area to analyze'
-      method_option :force, :type => :boolean, :aliases => '-f', :desc => 'force stop area analyzing process'
-      def stop name
+      def stop_area name
         shell.say "Stopping analyze area #{name}"
 
         pids = workers_pids name
@@ -77,12 +89,9 @@ module DCA
         Resque.remove_queue name
       end
 
-      private
-
       def area_config area_name
-        config = {}
         config = APP_CONFIG[:areas][area_name] if APP_CONFIG[:areas]
-        config
+        config || {}
       end
 
       def run_worker(queue, count = 1, background = true)
