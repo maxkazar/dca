@@ -52,14 +52,14 @@ module DCA
       desc 'start NAME', 'Start area to analyze'
       def start name = nil
         areas = name ? [name] : APP_CONFIG[:areas].keys
-        areas.each { |name| start_area name }
+        areas.each { |name| start_area name.to_s }
       end
 
       desc 'stop NAME', 'Stop area to analyze'
       method_option :force, :type => :boolean, :aliases => '-f', :desc => 'force stop area analyzing process'
       def stop name = nil
         areas = name ? [name] : APP_CONFIG[:areas].keys
-        areas.each { |name| stop_area name }
+        areas.each { |name| stop_area name.to_s }
       end
 
       protected
