@@ -89,7 +89,7 @@ module DCA
         puts "Starting #{count} worker(s) with QUEUE: #{queue}"
         unless background
           ENV['QUEUE'] = queue
-          ENV['VERBOSE'] = '1'
+          ENV['VERBOSE'] = '1' if APP_CONFIG[:verbose]
           ENV['TERM_CHILD'] = '1'
           ENV['RESQUE_TERM_TIMEOUT'] = RESQUE_TERM_TIMEOUT if defined? RESQUE_TERM_TIMEOUT
           Rake::Task['resque:work'].invoke
@@ -104,6 +104,7 @@ module DCA
           end
           env_vars = {'TERM_CHILD' => '1', 'QUEUE' => queue, 'SYS_ENV' => SYS_ENV}
           env_vars['RESQUE_TERM_TIMEOUT'] = RESQUE_TERM_TIMEOUT if defined? RESQUE_TERM_TIMEOUT
+          env_vars['VERBOSE'] = '1' if APP_CONFIG[:verbose]
           count.times {
             ## Using Kernel.spawn and Process.detach because regular system() call would
             ## cause the processes to quit when capistrano finishes
