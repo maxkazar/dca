@@ -82,7 +82,10 @@ module DCA
         shell.say "Stopping analyze area #{name}"
 
         pids = workers_pids name
-        `kill -s #{options[:force] ? 'QUIT' : 'TERM'} #{pids.join(' ')}` unless pids.empty?
+        unless pids.empty?
+          shell.say "Find workers with pids #{pids.join(', ')}"
+          `kill -s #{options[:force] ? 'QUIT' : 'TERM'} #{pids.join(' ')}`
+        end
 
         wait_worker name
 
