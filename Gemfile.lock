@@ -26,7 +26,6 @@ GEM
       git (>= 1.2.5)
       rake
       rdoc
-    json (1.7.3)
     libnotify (0.7.4)
       ffi (~> 1.0.11)
     listen (0.4.7)
@@ -56,8 +55,7 @@ GEM
     rb-fsevent (0.9.1)
     rb-inotify (0.8.8)
       ffi (>= 0.5.0)
-    rdoc (3.12)
-      json (~> 1.4)
+    rdoc (6.3.1)
     redis (2.2.2)
     redis-namespace (1.1.0)
       redis (< 3.0.0)
