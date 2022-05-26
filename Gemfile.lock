@@ -98,7 +98,7 @@ GEM
       macaddr (~> 1.0)
     vegas (0.1.11)
       rack (>= 1.0.0)
-    yajl-ruby (1.1.0)
+    yajl-ruby (1.4.3)
     yard (0.8.2.1)
 
 PLATFORMS
